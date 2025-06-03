@@ -11,7 +11,7 @@ import teachrouter from './Routes/teacherroute.js';
 
 const collegeapp = express();
 collegeapp.use(cors({
-    origin: 'http://localhost:5000',
+    origin: 'http://localhost:5173',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
 }))

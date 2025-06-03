@@ -1,4 +1,4 @@
-import { connnection } from '../main.js';
+import { connection } from '../main.js';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
@@ -20,8 +20,8 @@ async function createAdminUser() {
     }
 
     // Check if admin user already exists
-    const checkQuery = 'SELECT * FROM "user" WHERE "Email" = $1';
-    const existingUser = await connnection.query(checkQuery, [adminDetails.email]);
+    const checkQuery = 'SELECT * FROM "Users" WHERE Email = $1';
+    const existingUser = await connection.query(checkQuery, [adminDetails.email]);
     
     if (existingUser.rows.length > 0) {
       console.log('Admin user already exists with email:', adminDetails.email);
@@ -33,9 +33,9 @@ async function createAdminUser() {
     
     // Insert admin user into Users table - letting PostgreSQL handle the User Id
     const insertQuery = `
-      INSERT INTO "user" ("Name", "Email", "Password", "Course", "Role")
+      INSERT INTO "Users" (Name, Email, Password, Course, Role)
       VALUES ($1, $2, $3, $4, $5)
-      RETURNING "User Id", "Name", "Email", "Role"
+      RETURNING User_Id, Name, Email, Role
     `;
     
     const values = [
@@ -46,17 +46,13 @@ async function createAdminUser() {
       adminDetails.role
     ];
     
-    const result = await connnection.query(insertQuery, values);
+    const result = await connection.query(insertQuery, values);
     console.log('Admin user created successfully:');
-    console.log('User ID:', result.rows[0]['User Id']);
-    console.log('Name:', result.rows[0].Name);
-    console.log('Email:', result.rows[0].Email);
-    console.log('Role:', result.rows[0].Role);
   } catch (error) {
     console.error('Error creating admin user:', error.message);
   } finally {
     // Close the database connection
-    await connnection.end();
+    await connection.end();
   }
 }
 
