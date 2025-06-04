@@ -2,10 +2,12 @@ import { Router } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { connection } from "../main.js";
+import { verifyUserToken } from "../Middleware/verifyUserToken.js";
 
 const authrouter = Router();
 
 authrouter.post("/signup", async (req, res) => {
+  
   const { name, email, password, course } = req.body;
 
   try {
@@ -86,6 +88,10 @@ authrouter.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
+});
+
+authrouter.get('/verifyToken', verifyUserToken, (req, res) => {
+  res.status(200).json({ message: "Token is valid", userRole: req.loginRole });
 });
 
 authrouter.get("/logout", (req, res) => {

@@ -35,20 +35,16 @@ const Attendance = () => {
       </div>
 
       <div className="flex justify-center items-center min-h-[80vh] p-6">
-        {/* Combined Section for Image and Form */}
         <div className="flex flex-col lg:flex-row w-full max-w-4xl bg-white shadow-lg">
 
-          {/* Image Section */}
           <div className="flex justify-center items-center w-full lg:w-1/2 p-4">
             <img src={Attendancelogo} alt="Attendance" className="h-auto w-full object-contain" />
           </div>
 
-          {/* Form Section */}
           <div className="w-full lg:w-1/2 p-6">
             <h2 className="text-2xl font-semibold text-center mb-6">Mark Attendance</h2>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Student Dropdown */}
               <div>
                 <label htmlFor="student" className="block text-sm font-medium mb-1">Select Student</label>
                 <select
@@ -67,7 +63,6 @@ const Attendance = () => {
                 </select>
               </div>
 
-              {/* Date */}
               <div>
                 <label className="block text-sm font-medium mb-1">Date (Today Only)</label>
                 <input
@@ -78,7 +73,6 @@ const Attendance = () => {
                 />
               </div>
 
-              {/* Time */}
               <div>
                 <label className="block text-sm font-medium mb-1">Time (Auto-updated)</label>
                 <input
@@ -116,7 +110,6 @@ const Attendance = () => {
                 </div>
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-semibold transition"

@@ -5,7 +5,7 @@ dotenv.config();
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-import adminRoutes from './Routes/adminroute.js'
+import adminrouter from './Routes/adminroute.js'
 import authrouter from './Routes/userAuth.js'
 import teachrouter from './Routes/teacherroute.js';
 
@@ -19,9 +19,9 @@ collegeapp.use(cors({
 collegeapp.use(express.json());
 collegeapp.use(cookieParser());
 
-collegeapp.use('/api/admin', adminRoutes);
+collegeapp.use('/api/admin', adminrouter);
 collegeapp.use('/api/auth', authrouter);
-collegeapp.use('/api/teach', teachrouter);
+collegeapp.use('/api/teacher', teachrouter);
 
 const connection = new Client({
     host: process.env.DBHOST,

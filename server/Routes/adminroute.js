@@ -59,7 +59,6 @@ adminrouter.post("/addCourse", verifyUserToken, async (req, res) => {
 });
 
 adminrouter.post("/addBatch", verifyUserToken, async (req, res) => {
-  
   if (req.loginRole == "admin") {
     try {
       const { batchname, courseid, year, startdate, enddate } = req.body;
@@ -100,15 +99,135 @@ adminrouter.get("/getTeacherNames", verifyUserToken, async (req, res) => {
       const result = await connection.query(fetchquery);
 
       res.status(200).json({ teachers: result.rows });
-    } 
-    catch (error) {
+    } catch (error) {
       console.error("Error fetching teacher names:", error.message);
       res.status(500).json({ error: "Failed to fetch teacher names" });
     }
-  } 
-  else {
+  } else {
     res.status(404).send("Unauthorised access");
     console.log("Invalid access");
   }
 });
+
+adminrouter.get("/getCourseDetails",verifyUserToken, async (req, res) => {
+   
+  if (req.loginRole == "admin") {
+    try {
+      const fetchquery = `
+        SELECT *
+        FROM "Courses"`;
+
+      const result = await connection.query(fetchquery);
+
+      res.status(200).json({ courses: result.rows });
+    } catch (error) {
+      console.error("Error fetching courses:", error.message);
+      res.status(500).json({ error: "Failed to fetch courses" });
+    }
+  } else {
+    res.status(404).send("Unauthorised access");
+    console.log("Invalid access");
+  }
+});
+
+adminrouter.get("/getBatchDetails",verifyUserToken, async (req, res) => {
+   
+  if (req.loginRole == "admin") {
+    try {
+      const fetchquery = `
+        SELECT *
+        FROM "Batches"`;
+
+      const result = await connection.query(fetchquery);
+
+      res.status(200).json({ courses: result.rows });
+    } catch (error) {
+      console.error("Error fetching batches:", error.message);
+      res.status(500).json({ error: "Failed to fetch batch" });
+    }
+  } else {
+    res.status(404).send("Unauthorised access");
+    console.log("Invalid access");
+  }
+});
+
+adminrouter.patch("/updateTeacherSchedule", verifyUserToken, async (req, res) => {
+  
+  if (req.loginRole === "admin") {
+    
+    const { name, subjectsTaught, schedule } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ message: "Teacher name is required" });
+    }
+
+    try {
+      const updateQuery = `
+        UPDATE "Teachers"
+        SET Subjects_Taught = $1, Schedule = $2
+        WHERE teacher_name = $3
+        RETURNING *;
+      `;
+
+      const result = await connection.query(updateQuery, [
+        JSON.stringify(subjectsTaught),
+        JSON.stringify(schedule),
+        name,
+      ]);
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: "Teacher not found" });
+      }
+
+      res.status(200).json({ message: "Teacher updated successfully" });
+    }
+    catch (error) {
+      console.error("Error updating teacher:", error.message);
+      res.status(500).json({ message: "Failed to update teacher" });
+    }
+  } 
+  else {
+    res.status(403).json({ message: "Unauthorised access" });
+    console.log("Invalid access");
+  }
+});
+
+adminrouter.delete("/deleteTeacher", verifyUserToken, async (req, res) => {
+ 
+  if (req.loginRole === "admin") {
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ message: "Teacher name is required" });
+    }
+
+    try {
+
+      const checkQuery = `SELECT * FROM "Users" WHERE "Name" = $1 AND "Role" = 'teacher'`;
+      const userResult = await connection.query(checkQuery, [name]);
+
+      if (userResult.rows.length === 0) {
+        return res.status(404).json({ message: "No teacher found with the given name" });
+      }
+      const deleteQuery = `DELETE FROM "Users" WHERE "Name" = $1 AND "Role" = 'teacher'`;
+      const deleteResult = await connection.query(deleteQuery, [name]);
+
+      if (deleteResult.rowCount > 0) {
+        res.status(200).json({ message: `Teacher '${name}' deleted successfully` });
+        console.log(`Deleted teacher with name: ${name}`);
+      } else {
+        res.status(500).json({ message: "Deletion failed unexpectedly" });
+      }
+    } catch (error) {
+      console.error("Error deleting teacher:", error.message);
+      res.status(500).json({ message: "Internal server error" });
+    }
+
+  } else {
+    res.status(403).json({ message: "Unauthorized access" });
+    console.log("Unauthorized delete attempt");
+  }
+});
+
+
 export default adminrouter;

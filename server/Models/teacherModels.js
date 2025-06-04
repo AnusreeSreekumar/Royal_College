@@ -3,8 +3,9 @@ import { connection } from "../main.js";
 const createTeachrTable = async () => {
  
   const query = `CREATE TABLE IF NOT EXISTS "Teachers" (
-  User_Id INTEGER PRIMARY KEY REFERENCES "Users"("User_Id") ON DELETE CASCADE,
-  Teacher_Id TEXT UNIQUE,           
+  User_Id INTEGER PRIMARY KEY REFERENCES "Users"(user_id) ON DELETE CASCADE,
+  Teacher_Id TEXT UNIQUE, 
+  Teacher_name VARCHAR(100) NOT NULL,          
   Qualification VARCHAR(100),
   Department VARCHAR(100),
   Experience_Years INT,

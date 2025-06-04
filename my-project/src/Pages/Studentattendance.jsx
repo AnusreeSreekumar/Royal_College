@@ -11,7 +11,6 @@ const Studentattendance = () => {
         <p className="text-4xl font-bold text-center text-gray-800">Manage Attendance</p>
       </div>
       <div className="flex flex-col lg:flex-row pt-10 gap-8">
-        {/* Left Side */}
         <div className="flex-1 min-w-[700px]">
           <div className="bg-white p-8 rounded-lg shadow-lg mt-10">
             <div className="flex gap-10 flex-wrap">
@@ -68,12 +67,10 @@ const Studentattendance = () => {
           </div>
         </div>
 
-        {/* Right Side */}
         <div className="bg-white p-5 rounded-lg shadow-md mt-10 min-w-[250px] flex-1">
           <p className="text-2xl font-semibold text-gray-800 border-b border-gray-300 pb-3">
             Students Markings
           </p>
-          {/* Add additional content here later */}
         </div>
       </div>
     </div>

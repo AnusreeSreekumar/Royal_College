@@ -10,12 +10,10 @@ const Applyleave = () => {
       <div className="flex justify-center items-center py-10 px-4">
         <div className="flex flex-col lg:flex-row bg-white w-full max-w-6xl rounded-xl shadow-lg overflow-hidden">
 
-          {/* Left: Image */}
           <div className="lg:w-1/2 bg-gray-100 flex items-center justify-center p-4">
             <img src={leave} alt="Leave" className="w-full h-auto rounded-lg object-cover" />
           </div>
 
-          {/* Right: Form */}
           <div className="lg:w-1/2 p-8 flex items-center justify-center">
             <form className="w-full">
               <p className="border-y-2 border-green-600 text-2xl text-center py-3 mb-6 font-semibold">

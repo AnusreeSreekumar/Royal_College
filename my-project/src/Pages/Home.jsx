@@ -20,15 +20,11 @@ const Home = () => {
 
   return (
     <div className="w-full overflow-x-hidden">
-      {/* Top Banner */}
       <div className="w-full bg-blue-700 text-white text-sm py-2 px-4 font-semibold">
         Phone : +91 8593851244
       </div>
-
-      {/* Navbar */}
       <Navbar />
 
-      {/* Hero Image Carousel */}
       <div className="w-full h-[500px] md:h-[700px]">
         <img
           src={images[current]}
@@ -37,7 +33,6 @@ const Home = () => {
         />
       </div>
 
-      {/* Popular Courses */}
       <div className="bg-gray-900 text-white py-10 text-center">
         <h2 className="text-3xl font-bold mb-6">Popular Courses</h2>
         <div className="flex flex-wrap justify-center gap-6 px-4">
@@ -50,7 +45,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Welcome Section */}
       <div className="bg-white px-6 md:px-20 py-10 flex flex-col lg:flex-row gap-10">
         <div className="flex-1 text-black text-sm space-y-4">
           <h3 className="text-2xl font-bold">WELCOME TO ROYAL COLLEGE</h3>
@@ -75,7 +69,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Why Choose Us */}
       <div className="bg-blue-100 py-12 px-6 md:px-20">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
           <div className="flex-1">
