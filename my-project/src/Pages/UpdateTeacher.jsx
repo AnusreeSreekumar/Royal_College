@@ -64,6 +64,10 @@ const UpdateTeacher = () => {
     e.preventDefault();
     setError("");
     try {
+      console.log("subjectsTaught: ", subjectsTaught);
+      console.log("schedule: ", schedule);
+      
+      
       const res = await fetch(
         "http://localhost:3000/api/admin/updateTeacherSchedule",
         {

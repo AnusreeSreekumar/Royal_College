@@ -152,9 +152,9 @@ adminrouter.get("/getBatchDetails",verifyUserToken, async (req, res) => {
 });
 
 adminrouter.patch("/updateTeacherSchedule", verifyUserToken, async (req, res) => {
-  
+ 
   if (req.loginRole === "admin") {
-    
+   
     const { name, subjectsTaught, schedule } = req.body;
 
     if (!name) {
@@ -162,32 +162,56 @@ adminrouter.patch("/updateTeacherSchedule", verifyUserToken, async (req, res) =>
     }
 
     try {
-      const updateQuery = `
-        UPDATE "Teachers"
-        SET Subjects_Taught = $1, Schedule = $2
-        WHERE teacher_name = $3
-        RETURNING *;
-      `;
 
-      const result = await connection.query(updateQuery, [
-        JSON.stringify(subjectsTaught),
-        JSON.stringify(schedule),
-        name,
-      ]);
+      const fetchQuery = `SELECT Subjects_Taught, Schedule FROM "Teachers" WHERE Teacher_name = $1`;
+      const fetchResult = await connection.query(fetchQuery, [name]);
 
-      if (result.rowCount === 0) {
+      if (fetchResult.rowCount === 0) {
         return res.status(404).json({ message: "Teacher not found" });
       }
 
-      res.status(200).json({ message: "Teacher updated successfully" });
-    }
+      let existingSubjects = fetchResult.rows[0].subjects_taught || [];
+      console.log("1 ",existingSubjects);
+      
+      let mergedSubjects = Array.isArray(existingSubjects)
+        ? Array.from(new Set([...existingSubjects, ...(subjectsTaught || [])]))
+        : subjectsTaught || [];
+        console.log("2", mergedSubjects);
+        
+      let existingSchedule = fetchResult.rows[0].schedule || [];
+      console.log("3", existingSchedule);
+      
+      let mergedSchedule = Array.isArray(existingSchedule)
+        ? [...existingSchedule, ...(schedule || [])]
+        : schedule || [];
+        console.log("4", mergedSchedule);
+        
+
+      const updateQuery = `
+        UPDATE "Teachers"
+        SET Subjects_Taught = $1, Schedule = $2
+        WHERE Teacher_name = $3
+        RETURNING *;
+      `;
+
+      const updateResult = await connection.query(updateQuery, [
+        JSON.stringify(mergedSubjects),
+        JSON.stringify(mergedSchedule),
+        name,
+      ]);
+
+      res.status(200).json({
+        message: "Teacher updated successfully (merged)",
+        teacher: updateResult.rows[0],
+      });
+    } 
     catch (error) {
       console.error("Error updating teacher:", error.message);
       res.status(500).json({ message: "Failed to update teacher" });
     }
   } 
   else {
-    res.status(403).json({ message: "Unauthorised access" });
+    res.status(403).json({ message: "Unauthorized access" });
     console.log("Invalid access");
   }
 });
